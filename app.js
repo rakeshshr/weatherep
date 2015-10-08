@@ -1,23 +1,24 @@
+
 angular.module('weatherep', ['ngRoute'])
 
-   .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider){
-   	 $routeProvider
-   	  .when('/' {
-   	  	templateUrl: 'templates/search.html',
-   	  	controller: 'MainCtrl'
-   	  });
-   	 $routeProvider
-   	  .when('/about', {
-   	  	templateUrl: 'templates/about.html',
-   	  })
+  .config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
+    $routeProvider
+      .when('/', {
+        templateUrl: 'templates/search.html',
+        controller: 'MainCtrl'
+      });
+    $routeProvider
+      .when('/about',{
+        templateUrl: 'templates/about.html',
+      })
 
-   	 $locationProvider.html5Mode({
-   	 	enabled: true,
-   	 	requireBase: false
-   	 });
-   }])
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false
+    });
+  }])
 
-   controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
+  .controller('MainCtrl', ['$scope', '$http', function ($scope, $http) {
     $scope.photos = [];
 
     $scope.searchCity = function () {
@@ -55,7 +56,44 @@ angular.module('weatherep', ['ngRoute'])
               $scope.icon = "clouds.png";
             };
 
-            //temp for current weather
+
+          //temp for current weather
+          $scope.today = response.data.list[0].main.temp;
+
+          // test to see if we get the right data with rignt date
+          // $scope.description = response.data.list[0].main.humidity;
+          // console.log($scope.description);
+
+          //conversion of kelvein to farenheight
+          $scope.temp = Math.round(($scope.today - 273.15) * 1.8 + 32);
+
+          //finding the date
+          $scope.date = response.data.list[0].dt_txt;
+          var newDate = $scope.date.split(" ");
+          $scope.date = newDate[0];
+
+          //*****************************  day one's (Tommorrow's) weather *************************
+
+          //description of current weather
+          $scope.mainOne = response.data.list[7].weather[0].description;
+
+          //set icon for day one's weather id
+          $scope.oneId = response.data.list[7].weather[0].id;
+            if ($scope.oneId >= 200 && $scope.oneId <= 299){
+              $scope.iconOne = "thunderstorm.png";
+            }if ($scope.oneId >= 300 && $scope.oneId <= 399){
+              $scope.iconOne = "drizzle.png";
+            }else if ($scope.oneId >= 500 && $scope.oneId <= 599){
+              $scope.iconOne = "rain.png";
+            }else if ($scope.oneId >= 600 && $scope.oneId <= 699){
+              $scope.iconOne = "snow.png";
+            }else if ($scope.oneId >= 700 && $scope.oneId <= 799){
+              $scope.iconOne = "atmosphere.png";
+            }else{ ($scope.oneId >= 800 && $scope.oneId <= 899)
+              $scope.iconOne = "clouds.png";
+            };
+
+          //temp for current weather
           $scope.todayOne = response.data.list[7].main.temp;
 
           //conversion of kelvein to farenheight
@@ -183,5 +221,9 @@ angular.module('weatherep', ['ngRoute'])
           //***************************** end of day threes's weather ************************
     };
   }]);
+
+
+
+
 
 
